@@ -7,7 +7,7 @@
   <body>
     <h1>Anti-Bullying Reporting Form</h1>
 
-    <form action="https://script.google.com/macros/s/AKfycbw2nLzf0GatMb0Nja8hQNfQ5mv28uU7ekAevUaFvKmfXxXtKC0VH9pa9ksTzijrQKOVHA/exec" method="post">
+    <form action="https://script.google.com/macros/s/AKfycbwFAE1XaIdicLWTVEJk6FAexXGZsZJp7V2Ybbu3kbZjnNbQZzs7bO4hw8xhjHkDUf1Q-Q/exec" method="post">
 
       <label for="date">Date of Incident:</label><br>
       <input type="date" id="date" name="date" required><br><br>
@@ -23,6 +23,48 @@
 
       <button type="submit">Submit Report</button>
     </form>
+
+   <h1>Reported Incidents</h1>
+    
+    <div id="data-container">Loading data...</div>
+
+    <script>
+      // Paste your Google Apps Script deployment URL here
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbwFAE1XaIdicLWTVEJk6FAexXGZsZJp7V2Ybbu3kbZjnNbQZzs7bO4hw8xhjHkDUf1Q-Q/exec';
+      
+      // This is the container where we will put the data
+      const dataContainer = document.getElementById('data-container');
+
+      // This function "fetches" the data from your Google Script URL
+      fetch(scriptURL)
+        .then(response => response.json()) // Get the response and turn it into JSON
+        .then(data => {
+          
+          dataContainer.innerHTML = ""; // Clear the "Loading data..." message
+
+          // Loop through each report (each row from the sheet)
+          data.forEach(report => {
+            // Create a new div element for this report
+            const reportDiv = document.createElement('div');
+            reportDiv.className = 'report'; // Add a class for styling
+            
+            // Create the HTML content for the report
+            reportDiv.innerHTML = `
+              <h3>Incident on: ${report.date}</h3>
+              <p><strong>Location:</strong> ${report.location}</p>
+              <p><strong>Who was involved:</strong> ${report.who}</p>
+              <p><strong>What happened:</strong> ${report.what}</p>
+            `;
+            
+            // Add the new report div to our main container
+            dataContainer.appendChild(reportDiv);
+          });
+        })
+        .catch(error => {
+            console.error('Error!', error.message);
+            dataContainer.innerHTML = "Error loading data.";
+        });
+    </script>
 
   </body>
 </html>
